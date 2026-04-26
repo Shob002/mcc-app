@@ -7,59 +7,39 @@ export const contactRouter = createTRPCRouter({
   sendMessage: publicProcedure
     .input(
       z.object({
-        name: z.string().min(2, "Name is required"),
-        email: z.string().email("Valid email is required"),
+        name: z.string().min(2, "Name must be at least 2 characters"),
+        email: z.string().email("Invalid email address"),
         phone: z.string().optional(),
-        message: z.string().min(1, "Message is required"),
+        message: z.string().min(5, "Message must be at least 5 characters"),
       }),
     )
     .mutation(async ({ input }) => {
-      try {
-        if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-          throw new Error("Gmail environment variables are missing");
-        }
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
 
-        const transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_APP_PASSWORD,
-          },
-        });
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_TO ?? process.env.EMAIL_USER,
+        subject: `New Contact Message from ${input.name}`,
+        replyTo: input.email,
+        html: `
+          <h2>New Contact Message</h2>
+          <p><strong>Name:</strong> ${input.name}</p>
+          <p><strong>Email:</strong> ${input.email}</p>
+          <p><strong>Phone:</strong> ${input.phone ?? "Not provided"}</p>
+          <p><strong>Message:</strong></p>
+          <p>${input.message}</p>
+        `,
+      });
 
-        await transporter.verify();
-
-        await transporter.sendMail({
-          from: `"Master Crop Care Website" <${process.env.GMAIL_USER}>`,
-          to: process.env.CONTACT_RECEIVER_EMAIL ?? process.env.GMAIL_USER,
-          replyTo: input.email,
-          subject: `New Contact Message from ${input.name}`,
-          text: `
-Name: ${input.name}
-Email: ${input.email}
-Phone: ${input.phone || "Not provided"}
-
-Message:
-${input.message}
-          `,
-          html: `
-            <h2>New Contact Message</h2>
-            <p><b>Name:</b> ${input.name}</p>
-            <p><b>Email:</b> ${input.email}</p>
-            <p><b>Phone:</b> ${input.phone || "Not provided"}</p>
-            <p><b>Message:</b></p>
-            <p>${input.message}</p>
-          `,
-        });
-
-        return { success: true };
-      } catch (error) {
-        console.error("EMAIL SEND ERROR:", error);
-
-        const message =
-          error instanceof Error ? error.message : "Unknown email error";
-
-        throw new Error(message);
-      }
+      return {
+        success: true,
+        message: "Message sent successfully",
+      };
     }),
 });
