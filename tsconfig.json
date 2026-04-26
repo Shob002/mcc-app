@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    /* Base Options */
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "ES2022",
@@ -8,14 +7,11 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
 
-    /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
 
-    /* Next.js / Bundler */
     "lib": ["dom", "dom.iterable", "ES2022"],
     "noEmit": true,
     "module": "ESNext",
@@ -24,16 +20,10 @@
     "plugins": [{ "name": "next" }],
     "incremental": true,
 
-    /* Path Alias (IMPORTANT for ~/ imports) */
-    "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
-    },
-
-    /* ✅ FIX FOR WARNING */
-    "ignoreDeprecations": "5.0"
+    }
   },
-
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -42,6 +32,5 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-
   "exclude": ["node_modules", "generated"]
 }
