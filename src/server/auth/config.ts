@@ -1,17 +1,24 @@
-import Credentials from "next-auth/providers/credentials";
 import { type NextAuthConfig } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 
 export const authConfig = {
   providers: [
     Credentials({
       name: "Admin Login",
       credentials: {
-        password: { label: "Password", type: "password" },
+        password: {
+          label: "Password",
+          type: "password",
+        },
       },
+
       async authorize(credentials) {
         const password = credentials?.password;
 
-        if (password === process.env.ADMIN_PASSWORD) {
+        if (
+          typeof password === "string" &&
+          password === process.env.ADMIN_PASSWORD
+        ) {
           return {
             id: "1",
             name: "Admin",
@@ -33,8 +40,9 @@ export const authConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as { role?: string }).role ?? "USER";
+        token.role = (user as { role?: "ADMIN" | "USER" }).role ?? "USER";
       }
+
       return token;
     },
 
@@ -43,6 +51,7 @@ export const authConfig = {
         session.user.id = token.id as string;
         session.user.role = token.role as "ADMIN" | "USER";
       }
+
       return session;
     },
   },
