@@ -19,11 +19,11 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f6f8f6] px-6 py-10">
+    <main className="min-h-screen bg-[#f7f3ec] px-6 py-10">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="font-bold text-green-700">MASTER CROP CARE</p>
+            <p className="font-black text-amber-800">MASTER CROP CARE</p>
             <h1 className="text-3xl font-black text-green-950">
               Admin Dashboard
             </h1>
@@ -37,42 +37,55 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/admin/products"
-            className="rounded-4xl bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
+            className="rounded-[2rem] bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
           >
             <p className="text-4xl">📦</p>
             <h2 className="mt-4 text-2xl font-black text-green-950">
               Products
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-stone-600">
               Add, upload images, and manage products.
             </p>
           </Link>
 
           <Link
+            href="/admin/blog"
+            className="rounded-[2rem] bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
+          >
+            <p className="text-4xl">📝</p>
+            <h2 className="mt-4 text-2xl font-black text-green-950">
+              Blog
+            </h2>
+            <p className="mt-2 text-sm text-stone-600">
+              Publish crop care articles and updates.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/messages"
-            className="rounded-4xl bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
+            className="rounded-[2rem] bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
           >
             <p className="text-4xl">📩</p>
             <h2 className="mt-4 text-2xl font-black text-green-950">
-              Contact Messages
+              Messages
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-stone-600">
               View customer enquiries from contact form.
             </p>
           </Link>
 
           <Link
             href="/"
-            className="rounded-4xl bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
+            className="rounded-[2rem] bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
           >
             <p className="text-4xl">🏠</p>
             <h2 className="mt-4 text-2xl font-black text-green-950">
               Website
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-stone-600">
               Go back to public website.
             </p>
           </Link>
