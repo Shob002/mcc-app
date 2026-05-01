@@ -1,27 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AdminLogin() {
-  const [password, setPassword] = useState("");
-  const router = useRouter();
+const ADMIN_PASSWORD = "masterbag123";
 
-  // auto redirect if already logged in
+export default function AdminLoginPage() {
+  const router = useRouter();
+  const [password, setPassword] = useState("");
+
   useEffect(() => {
-    if (localStorage.getItem("admin")) {
+    const isAdmin = localStorage.getItem("admin");
+
+    if (isAdmin === "true") {
       router.replace("/admin");
     }
   }, [router]);
 
   const login = () => {
-    const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
-
-    if (!ADMIN_PASSWORD) {
-      alert("Admin password not configured");
-      return;
-    }
-
     if (password.trim() === ADMIN_PASSWORD) {
       localStorage.setItem("admin", "true");
       router.push("/admin");
@@ -40,6 +36,10 @@ export default function AdminLogin() {
           Admin Login
         </h1>
 
+        <p className="mt-2 text-sm text-stone-500">
+          Secure access for website management.
+        </p>
+
         <input
           type="password"
           placeholder="Enter admin password"
@@ -57,10 +57,6 @@ export default function AdminLogin() {
         >
           Login
         </button>
-
-        <p className="mt-4 text-center text-xs text-stone-500">
-          Secure admin access
-        </p>
       </div>
     </main>
   );
