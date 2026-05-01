@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
           <main className="flex-1">{children}</main>
 
-          <footer className="bg-gradient-to-br from-green-950 via-amber-950 to-stone-950 px-6 py-12 text-center text-white">
+          <footer className="bg-linear-to-br from-green-950 via-amber-950 to-stone-950 px-6 py-12 text-center text-white">
             <Image
               src="/logo.png"
               alt="Master Crop Care logo"
