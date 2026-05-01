@@ -67,7 +67,7 @@ export default function BlogManager() {
 
   return (
     <section className="mt-10 grid gap-8 lg:grid-cols-[420px_1fr]">
-      <div className="rounded-[2rem] bg-white p-6 shadow-xl">
+      <div className="rounded-4xl bg-white p-6 shadow-xl">
         <h2 className="text-xl font-black text-green-950">Add Blog</h2>
 
         <div className="mt-6 space-y-4">
@@ -123,7 +123,7 @@ export default function BlogManager() {
           )}
 
           {blogs.map((blog) => (
-            <article key={blog.id} className="rounded-[2rem] bg-white p-6 shadow">
+            <article key={blog.id} className="rounded-4xl bg-white p-6 shadow">
               <p className="text-xs font-black uppercase tracking-wide text-amber-800">
                 {blog.category}
               </p>
