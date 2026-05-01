@@ -1,30 +1,41 @@
-import Link from "next/link";
+"use client";
 
-export default function AdminLoginPage() {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function AdminLogin() {
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const login = () => {
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+      localStorage.setItem("admin", "true");
+      router.push("/admin");
+    } else {
+      alert("Wrong password");
+    }
+  };
+
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
-      <div className="w-full max-w-md rounded-2xl border border-emerald-100 bg-white p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900">Admin Login</h1>
-        <p className="mt-2 text-sm text-slate-600">
-          Sign in to continue to the admin dashboard.
-        </p>
+    <div className="flex h-screen items-center justify-center bg-green-50">
+      <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-xl">
+        <h1 className="text-2xl font-black text-green-900">Admin Login</h1>
 
-        <div className="mt-6 space-y-4">
-          <Link
-            href="/api/auth/signin"
-            className="block w-full rounded-xl bg-emerald-600 px-4 py-3 text-center font-medium text-white transition hover:bg-emerald-700"
-          >
-            Sign in with Discord
-          </Link>
+        <input
+          type="password"
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="mt-6 w-full rounded-xl border px-4 py-3 outline-none focus:border-green-700"
+        />
 
-          <Link
-            href="/"
-            className="block text-center text-sm text-slate-600 hover:text-emerald-700"
-          >
-            Back to Home
-          </Link>
-        </div>
+        <button
+          onClick={login}
+          className="mt-6 w-full rounded-xl bg-green-900 py-3 font-bold text-white hover:bg-green-800"
+        >
+          Login
+        </button>
       </div>
-    </main>
+    </div>
   );
 }

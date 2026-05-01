@@ -1,23 +1,83 @@
-export default function AdminPage() {
+"use client";
+
+import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function AdminDashboard() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!localStorage.getItem("admin")) {
+      router.replace("/admin/login");
+    }
+  }, [router]);
+
+  const logout = () => {
+    localStorage.removeItem("admin");
+    router.push("/");
+  };
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-
-      <p className="mt-2 text-slate-500">Welcome to Admin Panel</p>
-
-      <div className="mt-10 grid gap-6 md:grid-cols-4">
-        {[
-          ["1000+", "Farmers"],
-          ["250+", "Products"],
-          ["15+", "Years"],
-          ["99%", "Uptime"],
-        ].map(([num, label]) => (
-          <div key={label} className="rounded-xl bg-white p-6 shadow">
-            <h2 className="text-xl font-bold text-emerald-600">{num}</h2>
-            <p className="text-sm text-slate-500">{label}</p>
+    <main className="min-h-screen bg-[#f6f8f6] px-6 py-10">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-bold text-green-700">MASTER CROP CARE</p>
+            <h1 className="text-3xl font-black text-green-950">
+              Admin Dashboard
+            </h1>
           </div>
-        ))}
+
+          <button
+            onClick={logout}
+            className="rounded-full bg-red-600 px-5 py-2 text-sm font-bold text-white hover:bg-red-700"
+          >
+            Logout
+          </button>
+        </div>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/admin/products"
+            className="rounded-4xl bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
+          >
+            <p className="text-4xl">📦</p>
+            <h2 className="mt-4 text-2xl font-black text-green-950">
+              Products
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Add, upload images, and manage products.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/messages"
+            className="rounded-4xl bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
+          >
+            <p className="text-4xl">📩</p>
+            <h2 className="mt-4 text-2xl font-black text-green-950">
+              Contact Messages
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              View customer enquiries from contact form.
+            </p>
+          </Link>
+
+          <Link
+            href="/"
+            className="rounded-4xl bg-white p-8 shadow transition hover:-translate-y-1 hover:shadow-xl"
+          >
+            <p className="text-4xl">🏠</p>
+            <h2 className="mt-4 text-2xl font-black text-green-950">
+              Website
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Go back to public website.
+            </p>
+          </Link>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
