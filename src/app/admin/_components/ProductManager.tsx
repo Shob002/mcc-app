@@ -12,15 +12,19 @@ type Product = {
   description: string;
 };
 
+const emptyForm = {
+  id: "",
+  name: "",
+  category: "",
+  price: "",
+  image: "",
+  description: "",
+};
+
 export default function ProductManager() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [form, setForm] = useState({
-    name: "",
-    category: "",
-    price: "",
-    image: "",
-    description: "",
-  });
+  const [form, setForm] = useState<Product>(emptyForm);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("products");
@@ -32,59 +36,77 @@ export default function ProductManager() {
     localStorage.setItem("products", JSON.stringify(items));
   };
 
-  const addProduct = () => {
+  const handleSubmit = () => {
     if (!form.name || !form.category || !form.description) {
       alert("Please fill product name, category and description");
       return;
     }
 
-    const newProduct: Product = {
-      id: crypto.randomUUID(),
-      ...form,
-    };
+    if (editingId) {
+      // UPDATE
+      const updated = products.map((p) =>
+        p.id === editingId ? { ...form, id: editingId } : p,
+      );
+      saveProducts(updated);
+    } else {
+      // ADD
+      const newProduct: Product = {
+        ...form,
+        id: crypto.randomUUID(),
+      };
+      saveProducts([newProduct, ...products]);
+    }
 
-    saveProducts([newProduct, ...products]);
+    setForm(emptyForm);
+    setEditingId(null);
+  };
 
-    setForm({
-      name: "",
-      category: "",
-      price: "",
-      image: "",
-      description: "",
-    });
+  const handleEdit = (product: Product) => {
+    setForm(product);
+    setEditingId(product.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const cancelEdit = () => {
+    setForm(emptyForm);
+    setEditingId(null);
   };
 
   const deleteProduct = (id: string) => {
-    saveProducts(products.filter((product) => product.id !== id));
+    saveProducts(products.filter((p) => p.id !== id));
   };
 
   return (
     <section className="mt-10 grid gap-8 lg:grid-cols-[420px_1fr]">
+      {/* FORM */}
       <div className="rounded-4xl bg-white p-6 shadow-xl">
-        <h2 className="text-xl font-black text-green-950">Add Product</h2>
+        <h2 className="text-xl font-black text-green-950">
+          {editingId ? "Edit Product" : "Add Product"}
+        </h2>
 
         <div className="mt-6 space-y-4">
           <input
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="Product name"
-            className="w-full rounded-xl border px-4 py-3 outline-none focus:border-green-700"
+            className="w-full rounded-xl border px-4 py-3"
           />
 
           <input
             value={form.category}
             onChange={(e) => setForm({ ...form, category: e.target.value })}
             placeholder="Category"
-            className="w-full rounded-xl border px-4 py-3 outline-none focus:border-green-700"
+            className="w-full rounded-xl border px-4 py-3"
           />
 
           <input
             value={form.price}
             onChange={(e) => setForm({ ...form, price: e.target.value })}
-            placeholder="Price / Pack size / Optional"
-            className="w-full rounded-xl border px-4 py-3 outline-none focus:border-green-700"
+            placeholder="Price / Pack size"
+            className="w-full rounded-xl border px-4 py-3"
           />
 
+          {/* IMAGE UPLOAD */}
           <input
             type="file"
             accept="image/*"
@@ -93,29 +115,26 @@ export default function ProductManager() {
               if (!file) return;
 
               const reader = new FileReader();
-
               reader.onloadend = () => {
-                setForm((current) => ({
-                  ...current,
+                setForm((prev) => ({
+                  ...prev,
                   image: reader.result as string,
                 }));
               };
-
               reader.readAsDataURL(file);
             }}
             className="w-full rounded-xl border px-4 py-3"
           />
 
           {form.image && (
-            <div className="rounded-2xl border bg-green-50 p-3">
-              <Image
-                src={form.image}
-                alt="Product preview"
-                width={400}
-                height={240}
-                className="h-48 w-full rounded-xl object-contain"
-              />
-            </div>
+            <Image
+              src={form.image}
+              alt="preview"
+              width={400}
+              height={240}
+              className="h-48 w-full rounded-xl object-contain"
+              unoptimized
+            />
           )}
 
           <textarea
@@ -123,73 +142,66 @@ export default function ProductManager() {
             onChange={(e) =>
               setForm({ ...form, description: e.target.value })
             }
-            placeholder="Product description"
+            placeholder="Description"
             rows={5}
-            className="w-full rounded-xl border px-4 py-3 outline-none focus:border-green-700"
+            className="w-full rounded-xl border px-4 py-3"
           />
 
           <button
-            onClick={addProduct}
-            className="w-full rounded-xl bg-green-900 px-6 py-3 font-bold text-white hover:bg-green-800"
+            onClick={handleSubmit}
+            className="w-full rounded-xl bg-green-900 px-6 py-3 font-bold text-white"
           >
-            Add Product
+            {editingId ? "Update Product" : "Add Product"}
           </button>
+
+          {editingId && (
+            <button
+              onClick={cancelEdit}
+              className="w-full rounded-xl border px-6 py-3"
+            >
+              Cancel Edit
+            </button>
+          )}
         </div>
       </div>
 
+      {/* LIST */}
       <div>
         <h2 className="mb-5 text-2xl font-black text-green-950">
           Products ({products.length})
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {products.length === 0 && (
-            <div className="rounded-3xl bg-white p-8 text-slate-600 shadow">
-              No products added yet.
-            </div>
-          )}
-
           {products.map((product) => (
             <div
               key={product.id}
-              className="overflow-hidden rounded-4xl bg-white shadow transition hover:-translate-y-1 hover:shadow-xl"
+              className="rounded-4xl bg-white p-4 shadow"
             >
-              <div className="flex h-56 items-center justify-center bg-green-50 p-4">
-                {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    width={360}
-                    height={240}
-                    className="h-full w-full object-contain"
-                  />
-                ) : (
-                  <span className="text-sm text-slate-400">No image</span>
-                )}
-              </div>
+              {product.image && (
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={360}
+                  height={240}
+                  className="h-40 w-full object-contain"
+                  unoptimized
+                />
+              )}
 
-              <div className="p-6">
-                <p className="text-xs font-bold uppercase tracking-wide text-green-700">
-                  {product.category}
-                </p>
+              <h3 className="mt-3 font-bold">{product.name}</h3>
+              <p className="text-sm text-green-700">{product.category}</p>
 
-                <h3 className="mt-2 text-xl font-black text-green-950">
-                  {product.name}
-                </h3>
-
-                {product.price && (
-                  <p className="mt-2 font-bold text-green-700">
-                    {product.price}
-                  </p>
-                )}
-
-                <p className="mt-3 text-sm leading-6 text-slate-600">
-                  {product.description}
-                </p>
+              <div className="mt-4 flex gap-2">
+                <button
+                  onClick={() => handleEdit(product)}
+                  className="rounded bg-blue-600 px-3 py-1 text-white"
+                >
+                  Edit
+                </button>
 
                 <button
                   onClick={() => deleteProduct(product.id)}
-                  className="mt-5 rounded-full bg-red-600 px-5 py-2 text-sm font-bold text-white hover:bg-red-700"
+                  className="rounded bg-red-600 px-3 py-1 text-white"
                 >
                   Delete
                 </button>

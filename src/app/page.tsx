@@ -7,14 +7,17 @@ const categories = [
   {
     title: "Pheromone Lures",
     text: "Species-focused lure solutions for monitoring and managing crop pests through IPM practices.",
+    image: "/lure.png",
   },
   {
     title: "Trap Systems",
     text: "Field-ready traps designed to support pest surveillance, mass trapping, and crop protection.",
+    image: "/trap.png",
   },
   {
-    title: "OP & Hybrid Seeds",
-    text: "Seed technologies selected to support productivity, crop performance, and farmer needs.",
+    title: "Agri Inputs",
+    text: "Essential agricultural inputs designed to enhance crop protection, soil health, and overall farm productivity.",
+    image: "/input.png",
   },
 ];
 
@@ -22,13 +25,13 @@ export default function HomePage() {
   return (
     <main className="overflow-hidden bg-[#f7f3ec]">
       {/* HERO */}
-      <section className="relative bg-gradient-to-br from-green-950 via-amber-950 to-green-900 px-6 py-24 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-green-950 via-amber-950 to-green-900 px-6 py-24 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(217,119,6,0.25),transparent_30%)]" />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
           <div>
             <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-amber-200">
-              Supreme Crop Care Solutions Powered by Innovation
+              Supreme Crop Care Solutions ; Powered by Innovation
             </p>
 
             <h1 className="mt-6 text-5xl font-black leading-tight sm:text-7xl">
@@ -58,7 +61,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="rounded-[3rem] bg-white/10 p-6 shadow-2xl">
+          <div className="relative rounded-[3rem] bg-white/10 p-6 shadow-2xl">
             <Image
               src="/brand.png"
               alt="Master Crop Care brand"
@@ -109,9 +112,10 @@ export default function HomePage() {
 
             <p className="mt-6 text-lg leading-8 text-stone-700">
               The Master Crop Care brand uses brown and green to reflect the two
-              foundations of agriculture: healthy earth and thriving crops. Brown
-              stands for soil, roots, stability, and farmer trust. Green stands
-              for plant health, productivity, sustainability, and future growth.
+              foundations of agriculture: healthy earth and thriving crops.
+              Brown stands for soil, roots, stability, and farmer trust. Green
+              stands for plant health, productivity, sustainability, and future
+              growth.
             </p>
 
             <p className="mt-4 text-lg leading-8 text-stone-700">
@@ -167,12 +171,22 @@ export default function HomePage() {
             {categories.map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-amber-900/10 bg-[#f7f3ec] p-7 text-left shadow hover:shadow-xl"
+                className="rounded-2xl border border-amber-900/10 bg-[#f7f3ec] p-7 text-left shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className="mb-5 text-4xl">🌱</div>
+                <div className="mb-5 flex h-40 w-full items-center justify-center overflow-hidden rounded-xl bg-white">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    width={220}
+                    height={160}
+                    className="h-full w-full object-contain p-3 transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+
                 <h3 className="text-xl font-black text-green-950">
                   {item.title}
                 </h3>
+
                 <p className="mt-3 text-sm leading-7 text-stone-600">
                   {item.text}
                 </p>

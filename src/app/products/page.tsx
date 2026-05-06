@@ -12,13 +12,53 @@ type Product = {
   description: string;
 };
 
+const emptyForm: Product = {
+  id: "",
+  name: "",
+  category: "",
+  price: "",
+  image: "",
+  description: "",
+};
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [form, setForm] = useState<Product>(emptyForm);
 
   useEffect(() => {
     const saved = localStorage.getItem("products");
     setProducts(saved ? JSON.parse(saved) : []);
   }, []);
+
+  const saveProducts = (updatedProducts: Product[]) => {
+    setProducts(updatedProducts);
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+  };
+
+  const startEdit = (product: Product) => {
+    setEditingId(product.id);
+    setForm(product);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+  };
+
+  const updateProduct = () => {
+    const updatedProducts = products.map((product) =>
+      product.id === editingId ? form : product,
+    );
+
+    saveProducts(updatedProducts);
+    cancelEdit();
+  };
+
+  const deleteProduct = (id: string) => {
+    const updatedProducts = products.filter((product) => product.id !== id);
+    saveProducts(updatedProducts);
+  };
 
   return (
     <main className="min-h-screen bg-[#f6f8f6] px-6 py-20">
@@ -64,23 +104,107 @@ export default function ProductsPage() {
               </div>
 
               <div className="p-6">
-                <p className="text-xs font-bold uppercase tracking-wide text-green-700">
-                  {product.category}
-                </p>
+                {editingId === product.id ? (
+                  <div className="space-y-3">
+                    <input
+                      value={form.name}
+                      onChange={(e) =>
+                        setForm({ ...form, name: e.target.value })
+                      }
+                      placeholder="Product Name"
+                      className="w-full rounded-xl border px-4 py-2"
+                    />
 
-                <h2 className="mt-2 text-2xl font-black text-green-950">
-                  {product.name}
-                </h2>
+                    <input
+                      value={form.category}
+                      onChange={(e) =>
+                        setForm({ ...form, category: e.target.value })
+                      }
+                      placeholder="Category"
+                      className="w-full rounded-xl border px-4 py-2"
+                    />
 
-                {product.price && (
-                  <p className="mt-2 font-bold text-green-700">
-                    {product.price}
-                  </p>
+                    <input
+                      value={form.price}
+                      onChange={(e) =>
+                        setForm({ ...form, price: e.target.value })
+                      }
+                      placeholder="Price"
+                      className="w-full rounded-xl border px-4 py-2"
+                    />
+
+                    <input
+                      value={form.image}
+                      onChange={(e) =>
+                        setForm({ ...form, image: e.target.value })
+                      }
+                      placeholder="Image URL"
+                      className="w-full rounded-xl border px-4 py-2"
+                    />
+
+                    <textarea
+                      value={form.description}
+                      onChange={(e) =>
+                        setForm({ ...form, description: e.target.value })
+                      }
+                      placeholder="Description"
+                      rows={4}
+                      className="w-full rounded-xl border px-4 py-2"
+                    />
+
+                    <div className="flex gap-3">
+                      <button
+                        onClick={updateProduct}
+                        className="rounded-full bg-green-700 px-5 py-2 text-sm font-bold text-white hover:bg-green-800"
+                      >
+                        Save
+                      </button>
+
+                      <button
+                        onClick={cancelEdit}
+                        className="rounded-full border px-5 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs font-bold uppercase tracking-wide text-green-700">
+                      {product.category}
+                    </p>
+
+                    <h2 className="mt-2 text-2xl font-black text-green-950">
+                      {product.name}
+                    </h2>
+
+                    {product.price && (
+                      <p className="mt-2 font-bold text-green-700">
+                        {product.price}
+                      </p>
+                    )}
+
+                    <p className="mt-4 text-sm leading-7 text-slate-600">
+                      {product.description}
+                    </p>
+
+                    <div className="mt-6 flex gap-3">
+                      <button
+                        onClick={() => startEdit(product)}
+                        className="rounded-full bg-blue-600 px-5 py-2 text-sm font-bold text-white hover:bg-blue-700"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        onClick={() => deleteProduct(product.id)}
+                        className="rounded-full bg-red-600 px-5 py-2 text-sm font-bold text-white hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </>
                 )}
-
-                <p className="mt-4 text-sm leading-7 text-slate-600">
-                  {product.description}
-                </p>
               </div>
             </div>
           ))}

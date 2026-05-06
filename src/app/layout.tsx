@@ -1,140 +1,146 @@
 import "../styles/globals.css";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { TRPCReactProvider } from "~/trpc/react";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "Products", href: "/products" },
+  { label: "Blog", href: "/blog" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
 export const metadata: Metadata = {
   title: "Master Crop Care",
-  description: "Smart agriculture platform for modern farming solutions.",
+  description: "Supreme Crop Care Solutions Powered by Innovation.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-[#f7f3ec] font-sans text-stone-900 antialiased">
-        <div className="flex min-h-screen flex-col">
-          <header className="sticky top-0 z-50 border-b border-amber-900/10 bg-[#f7f3ec]/90 backdrop-blur">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-              <Link href="/" className="flex items-center gap-3">
+      <body className="min-h-screen bg-[#efe3cf] font-sans text-[#2b1a10] antialiased">
+        <TRPCReactProvider>
+          <div className="flex min-h-screen flex-col">
+
+            {/* HEADER */}
+            <header className="sticky top-0 z-50 border-b border-[#5b351c]/20 bg-[#efe3cf]/95 backdrop-blur">
+              <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+
+                {/* LOGO (UPDATED BIGGER) */}
+                <Link href="/" className="flex items-center gap-4">
+                  
+                  <div className="relative h-14 w-14">
+                    <Image
+                      src="/logo.png"
+                      alt="Master Crop Care logo"
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+
+                  <span className="text-lg font-black uppercase tracking-wide text-[#5b351c]">
+                    Master Crop Care
+                  </span>
+
+                </Link>
+
+                {/* NAV */}
+                <nav className="hidden items-center gap-8 text-sm font-bold text-[#3c2414] md:flex">
+                  {navLinks.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="hover:text-[#2f6b2f]"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* CTA */}
+                <Link
+                  href="/contact"
+                  className="rounded-full bg-[#2f6b2f] px-5 py-2 text-sm font-black text-[#f4e7cf] hover:bg-[#5b351c]"
+                >
+                  Get in Touch
+                </Link>
+              </div>
+            </header>
+
+            {/* MAIN */}
+            <main className="flex-1">{children}</main>
+
+            {/* FOOTER */}
+            <footer className="bg-gradient-to-br from-[#2b1a10] via-[#5b351c] to-[#1f4f2a] px-6 py-12 text-center text-[#f4e7cf]">
+              
+              <div className="relative mx-auto h-20 w-20">
                 <Image
                   src="/logo.png"
                   alt="Master Crop Care logo"
-                  width={44}
-                  height={44}
-                  className="rounded-xl bg-white p-1 shadow"
+                  fill
+                  className="object-contain"
                 />
-                <span className="font-black text-green-950">
-                  Master Crop Care
+              </div>
+
+              <h2 className="mt-5 text-xl font-black">
+                MASTER CROP CARE LLP
+              </h2>
+
+              <p className="mt-3 text-sm text-[#d8c09a]">
+                Supreme Crop Care Solutions Powered by Innovation
+              </p>
+
+              <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-[#ead6b7]">
+                <span className="rounded-full bg-[#efe3cf]/10 px-4 py-2">
+                  📞 +91 8147341645
                 </span>
-              </Link>
+                <span className="rounded-full bg-[#efe3cf]/10 px-4 py-2">
+                  📞 +91 9310908084
+                </span>
+                <span className="rounded-full bg-[#efe3cf]/10 px-4 py-2">
+                  ✉️ info@themasterbag.com
+                </span>
+              </div>
 
-              <nav className="hidden items-center gap-8 text-sm font-bold md:flex">
-                <Link href="/" className="hover:text-amber-800">
-                  Home
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
+                {navLinks.slice(1).map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-full border border-[#d8c09a]/50 px-6 py-2 text-sm font-bold hover:bg-[#efe3cf] hover:text-[#5b351c]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+
+                <Link
+                  href="/admin/login"
+                  className="rounded-full bg-[#efe3cf] px-6 py-2 text-sm font-bold text-[#5b351c] hover:bg-[#d8c09a]"
+                >
+                  Admin Login
                 </Link>
-                <Link href="/products" className="hover:text-amber-800">
-                  Products
-                </Link>
-                <Link href="/blog" className="hover:text-amber-800">
-                  Blog
-                </Link>
-                <Link href="/about" className="hover:text-amber-800">
-                  About
-                </Link>
-                <Link href="/contact" className="hover:text-amber-800">
-                  Contact
-                </Link>
-              </nav>
+              </div>
 
-              <Link
-                href="/contact"
-                className="rounded-full bg-amber-900 px-5 py-2 text-sm font-bold text-white hover:bg-green-900"
-              >
-                Get in Touch
-              </Link>
-            </div>
-          </header>
+              <p className="mt-8 border-t border-[#f4e7cf]/15 pt-6 text-xs text-[#d8c09a]">
+                © {new Date().getFullYear()} Master Crop Care LLP. All rights
+                reserved.
+              </p>
+            </footer>
 
-          <main className="flex-1">{children}</main>
-
-          <footer className="bg-linear-to-br from-green-950 via-amber-950 to-stone-950 px-6 py-12 text-center text-white">
-            <Image
-              src="/logo.png"
-              alt="Master Crop Care logo"
-              width={80}
-              height={80}
-              className="mx-auto rounded-2xl bg-white p-2 shadow-xl"
-            />
-
-            <h2 className="mt-5 text-xl font-black">MASTER CROP CARE LLP</h2>
-
-            <p className="mt-3 text-sm text-amber-100">
-              Supreme Crop Care Solutions Powered by Innovation
-            </p>
-
-            <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm text-amber-100">
-              <span className="rounded-full bg-white/10 px-4 py-2">
-                📞 +91 8147341645
-              </span>
-              <span className="rounded-full bg-white/10 px-4 py-2">
-                📞 +91 9310908084
-              </span>
-              <span className="rounded-full bg-white/10 px-4 py-2">
-                ✉️ mastercropcare.5@gmail.com
-              </span>
-            </div>
-
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link
-                href="/products"
-                className="rounded-full border border-amber-200/50 px-6 py-2 text-sm font-bold hover:bg-white hover:text-amber-950"
-              >
-                Products
-              </Link>
-
-              <Link
-                href="/blog"
-                className="rounded-full border border-amber-200/50 px-6 py-2 text-sm font-bold hover:bg-white hover:text-amber-950"
-              >
-                Blog
-              </Link>
-
-              <Link
-                href="/about"
-                className="rounded-full border border-amber-200/50 px-6 py-2 text-sm font-bold hover:bg-white hover:text-amber-950"
-              >
-                About
-              </Link>
-
-              <Link
-                href="/contact"
-                className="rounded-full border border-amber-200/50 px-6 py-2 text-sm font-bold hover:bg-white hover:text-amber-950"
-              >
-                Contact
-              </Link>
-
-              <Link
-                href="/admin/login"
-                className="rounded-full bg-white px-6 py-2 text-sm font-bold text-amber-950 hover:bg-amber-100"
-              >
-                Admin Login
-              </Link>
-            </div>
-
-            <p className="mt-8 border-t border-white/10 pt-6 text-xs text-amber-200">
-              © {new Date().getFullYear()} Master Crop Care LLP. All rights
-              reserved.
-            </p>
-          </footer>
-        </div>
+          </div>
+        </TRPCReactProvider>
       </body>
     </html>
-  )
+  );
 }

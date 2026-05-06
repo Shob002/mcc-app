@@ -84,19 +84,24 @@ export default function ContactPage() {
         </div>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+          
+          {/* CONTACT DETAILS */}
           <div className="rounded-4xl bg-green-950 p-8 text-white shadow-xl">
             <h2 className="text-2xl font-black">Contact Details</h2>
 
             <div className="mt-6 space-y-4 text-sm text-green-100">
               <p>📞 +91 8147341645</p>
               <p>📞 +91 9310908084</p>
-              <p>✉️ mastercropcare.5@gmail.com</p>
+              <p>✉️ info@themasterbag.com</p>
+
               <p>
-                📍 MCC Unit 1, Tumakuru, Karnataka – 572106, India
+                📍 Prod. Unit & Office - 1st floor, Shanthi Nagar, Service Road,
+                NH-04, Antharasanahalli, Tumkur - 572106, KA, INDIA.
               </p>
             </div>
           </div>
 
+          {/* FORM */}
           <div className="rounded-4xl bg-white p-8 shadow-xl">
             <div className="space-y-5">
               <div>
@@ -159,6 +164,7 @@ export default function ContactPage() {
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </main>
